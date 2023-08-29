@@ -13,8 +13,8 @@ if not os.path.exists(os.path.join(".","CSV","user-export.csv")):
     exit(1)
 if not os.path.isdir("AllPDFS"):
     os.mkdir("AllPDFS")
-if not os.path.isdir("AllPDFS"):
-    os.mkdir("AllPDFS")
+if not os.path.isdir("AllPhotos"):
+    os.mkdir("AllPhotos")
 
 
 # import after checks becuse Template.py uses them
@@ -121,7 +121,7 @@ class MyServer(BaseHTTPRequestHandler):
             self.send_header("Content-Type","text/text")
             self.end_headers()
       #Get the last pdf that was recreated. getPDF is only updated in /ID
-      if self.path == "/"+getPDF():
+      if self.path == "" if getPDF() == "" else "/"+getPDF():
          self.send_response(200)
          self.send_header("Content-type", "application/pdf")
          self.end_headers()
