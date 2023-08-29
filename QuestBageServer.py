@@ -121,7 +121,7 @@ class MyServer(BaseHTTPRequestHandler):
             self.send_header("Content-Type","text/text")
             self.end_headers()
       #Get the last pdf that was recreated. getPDF is only updated in /ID
-      if self.path == "" if getPDF() == "" else "/"+getPDF():
+      if self.path == ("" if getPDF() == "" else "/"+getPDF()):
          self.send_response(200)
          self.send_header("Content-type", "application/pdf")
          self.end_headers()
