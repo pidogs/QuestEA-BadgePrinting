@@ -1,0 +1,158 @@
+/* Its css stuff nothing complicated just search css if you are confused. glhf */
+
+body {
+   background: linear-gradient(75deg, #1c43a5 0%, #1d8ba1 100%);
+   height: 100vh;
+   overflow: hidden;
+}
+
+.grid {
+   display: grid;
+   grid-template-columns: 550px 700px auto;
+   max-height : 100vh;
+   overflow: hidden;
+   grid-template-rows:100vh;
+}
+
+.smallGrid{
+   text-align: center;
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+}
+
+.input{
+   display: flex;
+   justify-content: center;
+   height: 40px;
+   width: 70%;
+   padding: 3px;
+   text-align: center;
+   border-radius: 25px;
+   margin: 10px auto 20px auto;
+   outline:0;
+   outline-color: #000;
+   border-color: #000;
+   border-style: solid;
+   background-color: #888;
+   font-size: 1.8em;
+   transition: ease-in-out, background-color .25s ease-in-out;
+}
+
+.input:focus
+{
+   background-color: #EEE;
+   transition: ease-in-out, background-color .25s ease-in-out;
+}
+
+.name{
+   display: flex;
+   vertical-align: bottom;
+   background-color: #4180de;
+   border-radius: 25px;
+   margin: 2px;
+   cursor: pointer;
+   height: 2em;
+   align-items: center;
+   justify-content: center;
+   border: 1.5px solid #000;
+}
+
+#video {
+   border: 2px solid black;
+   width: 400px;
+   height: 400px;
+   object-fit: cover;
+   border-radius: 25px;
+}
+
+#photo {
+   border: 2px solid black;
+   width: 400px;
+   height: 400px;
+   object-fit: cover;
+   border-radius: 25px;
+}
+
+#canvas {
+   display: none;
+}
+
+.camera {
+   display: block;
+   margin: 0 auto;
+   text-align: center;
+}
+
+.output {
+   display: block;
+   margin: 0 auto;
+   text-align: center;
+}
+
+#startbutton {
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 10px;
+   margin-bottom: 14px;
+   padding: 10px;
+   background-color: #A00;
+   border: 1px solid #000000b3;
+   border-radius: 25px;
+   font-size: 20px;
+   color: rgba(255, 255, 255, 1.0);
+   cursor: pointer;
+}
+
+.oval {
+   display: block;
+   position: relative;
+   top: -360px;
+   margin-left: auto;
+   margin-right: auto;
+   width: 120px;
+   height: 160px;
+   border-radius: 50%;
+   border: 5px dashed #000000;
+}
+
+.contentarea {
+   margin-top: 25px;
+   font-size: 16px;
+   font-family: Arial;
+   position: relative;
+}
+
+/* #startbutton {
+   display: block;
+   position: relative;
+   margin-left: auto;
+   margin-right: auto;
+   bottom: 36px;
+   padding: 5px;
+   background-color: #6a67ce;
+   border: 1px solid rgba(255, 255, 255, 0.7);
+   font-size: 14px;
+   color: rgba(255, 255, 255, 1.0);
+   cursor: pointer;
+} */
+
+.print{
+   display: flex;
+   height: 300px;
+   width: 360px;
+   margin: auto;
+   padding: 100px;
+   border-radius: 25px;
+   cursor: pointer;
+   justify-content: center;
+   text-align: center;
+   align-items: center;
+   border: 2px solid #000;
+   background-color: #0B0;
+   font-size: 6em;
+   margin-top: 75px;
+   font-weight: bold;
+}
+
+
