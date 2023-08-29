@@ -5,7 +5,7 @@ AllPDFS/*
 !AllPDFS/pdfWillBeGeneratedHere.md
 # dont save photos to git for security
 AllPhotos/*
-AllPhotos/PNGWillBeSavedHere.md
+!AllPhotos/PNGWillBeSavedHere.md
 # dont save gimp files to git
 *.xcf
 __pycache__
