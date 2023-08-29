@@ -110,22 +110,13 @@ window.addEventListener('load', startup, false);
 function printDocument() {
    //document.getElementById("print").click()
    var doc = document.getElementById("pdfDocument");
-   //Wait until PDF is ready to print    
-   if (typeof doc.contentWindow.print() === 'undefined') {
-      setTimeout(function () {
-         printDocument("pdfDocument");
-      }, 250);
-   } else {
-      doc.contentWindow.focus();
-      doc.contentWindow.print();
-   }
-   console.log("Print");
+   doc.contentWindow.focus();
+   doc.contentWindow.print();
 
 }
 
 function whenPrintIsReady() {
    document.getElementById("print").style.backgroundColor = "#4E4";
-   alert("THis si running")
 }
 
 
