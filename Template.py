@@ -9,7 +9,7 @@ fontDir = "Fonts"
 TitleFont = ImageFont.truetype(os.path.join(fontDir,'NotoSansCJK-Regular.ttc'), 50)
 ExtraWordsFont = ImageFont.truetype(os.path.join(fontDir,'NotoSerif-Regular.ttf'), 50)
 NameFont = os.path.join(fontDir,'NotoSansCJK-Bold.ttc')
-CSVName = os.path.join("./","CSV","user-export.csv")
+CSVName = os.path.join(".","CSV","user-export.csv")
 TitleLookUp = {"I":"Instructor","A":"Administrator","P":"Parent"}
 
 # Students = []
