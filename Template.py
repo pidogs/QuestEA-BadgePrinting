@@ -125,7 +125,7 @@ def MakeStudentPDF(Code, PhotoPath):
          os.rename(PhotoPath,f"./AllPhotos/{Name}.{PhotoPath.split('.')[-1]}")
    #img.show()
    #Return name of pdf and picture 
-   return f"/{Name}.pdf" , f"./AllPhotos/{Name}.{PhotoPath.split('.')[-1]}"
+   return f"{Name}.pdf" , os.path.join(".","AllPhotos",f"{Name}.{PhotoPath.split('.')[-1]}")
 
 #The main program part
 def MakeTeacherPDF(Code, PhotoPath="Face2.jpg"):
@@ -184,7 +184,7 @@ def MakeTeacherPDF(Code, PhotoPath="Face2.jpg"):
          os.rename(PhotoPath,f"./AllPhotos/{Name}.{PhotoPath.split('.')[-1]}")
    #img.show()
    #Return name of pdf and picture 
-   return f"/{Name}.pdf" , f"./AllPhotos/{Name}.{PhotoPath.split('.')[-1]}"
+   return f"{Name}.pdf" , os.path.join(".","AllPhotos",f"{Name}.{PhotoPath.split('.')[-1]}")
 
 
 def makePDF(Code,PhotoPath="Face2.jpg"):

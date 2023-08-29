@@ -8,8 +8,8 @@ import csv
 # check if needed folders and files exist before starting.
 if not os.path.isdir("CSV"):
     os.mkdir("CSV")
-if not os.path.exists(os.path.join("./","CSV","user-export.csv")):
-    print(f"Error: file `{os.path.join('./','CSV','user-export.csv')}` dose not exist.")
+if not os.path.exists(os.path.join(".","CSV","user-export.csv")):
+    print(f"Error: file `{os.path.join('.','CSV','user-export.csv')}` dose not exist.")
     exit(1)
 if not os.path.isdir("AllPDFS"):
     os.mkdir("AllPDFS")
@@ -49,8 +49,8 @@ def getRFID():
    return RFID
 
 def SaveRFIDName(ID,Name):
-   file_exists = os.path.exists(os.path.join("./","CSV","RFID_Names.csv"))
-   with open(os.path.join("./","CSV","RFID_Names.csv"), 'a', newline='') as csv_file:
+   file_exists = os.path.exists(os.path.join(".","CSV","RFID_Names.csv"))
+   with open(os.path.join(".","CSV","RFID_Names.csv"), 'a', newline='') as csv_file:
       csv_writer = csv.writer(csv_file)
       if not file_exists:
          csv_writer.writerow(['RFID Number', 'Name'])
@@ -89,13 +89,13 @@ class MyServer(BaseHTTPRequestHandler):
          self.send_response(200)
          self.send_header("Content-type", "text/csv")
          self.end_headers()
-         with open(os.path.join("./","CSV","user-export.csv"),'rb') as f:
+         with open(os.path.join(".","CSV","user-export.csv"),'rb') as f:
             self.wfile.write(f.read())
       if self.path == ('/ThisIsFine.pdf'):
          self.send_response(200)
          self.send_header("Content-type", "application/pdf")
          self.end_headers()
-         with open(os.path.join("./","Templates","ThisIsFine.pdf"),'rb') as f:
+         with open(os.path.join(".","Templates","ThisIsFine.pdf"),'rb') as f:
             self.wfile.write(f.read())
       #The server receives the id in format /ID?S050301 and return the name of the person 
       if self.path.split("?")[0] == ("/ID"):
@@ -111,21 +111,24 @@ class MyServer(BaseHTTPRequestHandler):
             #setting global variables
             setPDF(temp)
             setPIX(temp2)
-            SaveRFIDName(afterStringSplit[1],temp[1:-4])
+            SaveRFIDName(afterStringSplit[1],temp[0:-4])
 
             #Returns the Name with dash instead of space
-            self.wfile.write(temp.encode('utf-8'))
+            self.wfile.write(os.path.join("",temp).encode('utf-8'))
             setRFID("")
          else:
             self.send_response(400)
             self.send_header("Content-Type","text/text")
             self.end_headers()
       #Get the last pdf that was recreated. getPDF is only updated in /ID
-      if self.path == getPDF():
+      if self.path == "/"+getPDF():
          self.send_response(200)
          self.send_header("Content-type", "application/pdf")
          self.end_headers()
-         with open(f"./AllPDFS{getPDF()}",'rb') as f:
+         print("GETPDF")
+         print(getPDF())
+         print(os.path.join(".","AllPDFS",str(getPDF())))
+         with open(os.path.join(".","AllPDFS",str(getPDF())),'rb') as f:
             self.wfile.write(f.read())
       
       # if self.path == "/PDF":
