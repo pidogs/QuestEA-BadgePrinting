@@ -91,6 +91,7 @@ class MyServer(BaseHTTPRequestHandler):
          self.end_headers()
          with open(os.path.join(".","CSV","user-export.csv"),'rb') as f:
             self.wfile.write(f.read())
+         Template.CSVReload()
       if self.path == ('/ThisIsFine.pdf'):
          self.send_response(200)
          self.send_header("Content-type", "application/pdf")

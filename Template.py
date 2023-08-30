@@ -18,11 +18,16 @@ TitleLookUp = {"I":"Instructor","A":"Admin","P":"Parent","S":"Student"}
 #    for row in reader:
 #       Students.append(row)
 
-#Loads the csv file into dictionary for quick look up
 Students = {}
-with open(CSVName,encoding='utf-8-sig', mode='r') as f:
-    data = csv.reader(f)
-    Students = {rows[0]:f'{rows[1].strip().title()}\n{rows[2].strip().title()}' for rows in data}
+#reload csv file
+def CSVReload():
+    global Students  
+    with open(CSVName,encoding='utf-8-sig', mode='r') as f:
+        data = csv.reader(f)
+        Students = {rows[0]:f'{rows[1].strip().title()}\n{rows[2].strip().title()}' for rows in data}
+
+#Loads the csv file into dictionary for quick look up
+CSVReload()
 
 #counting characters in string length this can should be shortened to len(string) but it works for now/
 def charInString(input_string):

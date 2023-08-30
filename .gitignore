@@ -8,4 +8,5 @@ AllPhotos/*
 !AllPhotos/PNGWillBeSavedHere.md
 # dont save gimp files to git
 *.xcf
+TEMP.png
 __pycache__
