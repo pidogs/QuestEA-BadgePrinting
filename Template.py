@@ -10,7 +10,7 @@ TitleFont = ImageFont.truetype(os.path.join(fontDir,'NotoSansCJK-Regular.ttc'), 
 ExtraWordsFont = ImageFont.truetype(os.path.join(fontDir,'NotoSerif-Regular.ttf'), 50)
 NameFont = os.path.join(fontDir,'NotoSansCJK-Bold.ttc')
 CSVName = os.path.join(".","CSV","user-export.csv")
-TitleLookUp = {"I":"Instructor","A":"Administrator","P":"Parent"}
+TitleLookUp = {"I":"Instructor","A":"Admin","P":"Parent","S":"Student"}
 
 # Students = []
 # with open(CSVName,"r") as file:
@@ -76,7 +76,7 @@ def MakeStudentPDF(Code, PhotoPath):
       return 1
    Name=RawName
    #set up stuff
-   title = "Student"
+   title = TitleLookUp.get(Code[0],"Unknown")
    Year = "2023-24"
    ExtraWords = "Quest for Education\n& Arts, Inc."
 
@@ -85,7 +85,7 @@ def MakeStudentPDF(Code, PhotoPath):
    FacePos = (50,350)
    nameFromTop = 75
    FaceBorderWidth=4
-   template = Image.open("./Templates/StudentsTemplate.png")
+   template = Image.open("./Templates/"+title+"Template.png")
 
    Num = charInString(Name)
    #making the name have \n (New Line) instead of spaces
@@ -197,7 +197,7 @@ def makePDF(Code,PhotoPath="Face2.jpg"):
       return t1,t2
    if Code[0]:
       print("Teacher")
-      t1,t2 = MakeTeacherPDF(Code, PhotoPath)
+      t1,t2 = MakeStudentPDF(Code, PhotoPath)
       print(t1,t2)
       return t1,t2
 
