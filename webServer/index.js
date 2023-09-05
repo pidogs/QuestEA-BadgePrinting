@@ -140,6 +140,8 @@ function loadNames(list) {
 
 let NumberOfNames = 0;
 
+const Colors = {"S":"#3da01c","I":"#2b28cc","P":"#651ca0","A":"#1c7ba0"}
+
 function makeNameElement(ID, Name) {
    let elm = document.createElement("div")
    elm.setAttribute("class", "name");
@@ -148,6 +150,8 @@ function makeNameElement(ID, Name) {
    elm.setAttribute("onclick", a)
    elm.setAttribute("name", ID)
    elm.innerHTML = Name
+   elm.style.backgroundColor = Colors[Array.from(ID)[0]]
+   
    return elm
 }
 

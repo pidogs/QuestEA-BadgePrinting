@@ -3,6 +3,9 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 import sys
 import csv
+import datetime
+import requests
+from io import BytesIO
 
 #Set up stuff
 fontDir = "Fonts"
@@ -29,6 +32,17 @@ def CSVReload():
 #Loads the csv file into dictionary for quick look up
 CSVReload()
 
+#automatically update the date
+def getYear():
+    today = datetime.date.today()
+    if today.month >= 7:
+        startYear = today.year
+    else:
+        startYear = today.year - 1
+    endYear = startYear + 1
+    
+    return f"{startYear}-{str(endYear)[2:]}"
+
 #counting characters in string length this can should be shortened to len(string) but it works for now/
 def charInString(input_string):
    letter_count = 0
@@ -48,7 +62,7 @@ def addQrCode(Code,BaseImage,QrOffset,w,h):
    return BaseImage
 
 #adds the face and border in a specific position 
-def addFaceAndBorder(FaceName,BaseImage,maxsize,FacePos,img,FaceBorderWidth):
+def addFaceAndBorder(img,FaceName,maxsize,FacePos,FaceBorderWidth):
    Face = Image.open(FaceName)
    Face = Face.crop(((Face.size[0]-Face.size[1])/2,0,Face.size[0]-(Face.size[0]-Face.size[1])/2,Face.size[1]))
    Face.thumbnail((maxsize,maxsize), Image.LANCZOS)
@@ -57,6 +71,16 @@ def addFaceAndBorder(FaceName,BaseImage,maxsize,FacePos,img,FaceBorderWidth):
    draw = ImageDraw.Draw(img)
    draw.rectangle([FacePos,(FacePos[0]+wF,FacePos[1]+hF)],outline ="Black",width=FaceBorderWidth)
    return img,draw
+
+def addURLImage(img,URL,maxsize,Pos,FaceBorderWidth):
+   response = requests.get(URL,timeout=5)
+   if response.status_code == 200:
+      DLImage = Image.open(BytesIO(response.content))
+   DLImage = DLImage.crop(((DLImage.size[0]-DLImage.size[1])/2,0,DLImage.size[0]-(DLImage.size[0]-DLImage.size[1])/2,DLImage.size[1]))
+   DLImage.thumbnail((maxsize,maxsize), Image.LANCZOS)
+   wF,hF = DLImage.size
+   img.paste(DLImage,Pos,DLImage)
+   return img
 
 #Adds the tilde with new line for first and last name
 def topWords(draw,Name,font,w,h,wOffset=0,hOffset=0,addedOffset=0):
@@ -82,7 +106,7 @@ def MakeStudentPDF(Code, PhotoPath):
    Name=RawName
    #set up stuff
    title = TitleLookUp.get(Code[0],"Unknown")
-   Year = "2023-24"
+   Year = getYear()
    ExtraWords = "Quest for Education\n& Arts, Inc."
 
    QrOffset = 50
@@ -108,7 +132,9 @@ def MakeStudentPDF(Code, PhotoPath):
    w,h = template.size
 
    template = addQrCode(Code,template,QrOffset,w,h) #Qr Code
-   template,draw = addFaceAndBorder(PhotoPath,template,maxsize,FacePos,template,FaceBorderWidth) #Face
+   if Code[1:] == "050301":
+      template = addURLImage(template,"https://avatars.githubusercontent.com/u/44046537?v=0",110,(188,725),0) #David
+   template,draw = addFaceAndBorder(template,PhotoPath,maxsize,FacePos,FaceBorderWidth) #Face
    topWords(draw,Name,font,w,h,hOffset=nameFromTop) #Name
    TitleH = addSideText(draw,title,TitleFont,75,w,h,FacePos,maxsize)#Title student, teacher, ....
    DateH = addSideText(draw,Year,TitleFont,TitleH+20,w,h,FacePos,maxsize) #Date
@@ -121,7 +147,7 @@ def MakeStudentPDF(Code, PhotoPath):
    tmp = Name.rsplit("\n")
    Name = "-".join(tmp)
    print("Makeer "+Name)
-   template.save(f"./AllPDFS/{Name}.pdf",quality=90,resolution=300)
+   template.save(f"./AllPDFS/{Name}.pdf",quality=95,resolution=300)
    #if the file is run by itself then dont save the picture
    if __name__ != "__main__": 
       if os.path.isfile(f"./AllPhotos/{Name}.{PhotoPath.split('.')[-1]}") and PhotoPath == "TEMP.png":
@@ -168,7 +194,7 @@ def MakeTeacherPDF(Code, PhotoPath="Face2.jpg"):
    w,h = template.size
 
    template = addQrCode(Code,template,QrOffset,w,h) #Qr Code
-   template,draw = addFaceAndBorder(PhotoPath,template,maxsize,FacePos,template,FaceBorderWidth) #Face
+   template,draw = addFaceAndBorder(template,PhotoPath,maxsize,FacePos,FaceBorderWidth) #Face
    topWords(draw,Name,font,w,h,nameLeftOffset,hOffset=nameFromTop,addedOffset=-16) #Name
    addSideText(draw,Year,TitleFont,200,w,h,FacePos,maxsize)#Date + Title student, teacher, ....
    topWords(draw,ExtraWords,ExtraWordsFont,w,h,hOffset=FacePos[1]+maxsize+15,addedOffset=10) #Adds Quest for education and arts

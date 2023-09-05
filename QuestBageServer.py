@@ -2,7 +2,6 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import os 
 import time
 import base64
-
 import csv
 
 # check if needed folders and files exist before starting.
