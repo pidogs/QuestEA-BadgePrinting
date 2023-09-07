@@ -2,6 +2,7 @@
 *.csv
 # dont save pdf to git to save room and not put photos online
 AllPDFS/*
+*.number
 !AllPDFS/pdfWillBeGeneratedHere.md
 # dont save photos to git for security
 AllPhotos/*

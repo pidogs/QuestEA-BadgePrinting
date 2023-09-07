@@ -140,7 +140,8 @@ function loadNames(list) {
 
 let NumberOfNames = 0;
 
-const Colors = {"S":"#3da01c","I":"#2b28cc","P":"#651ca0","A":"#1c7ba0"}
+const Colors = {"S":"#3da01c","I":"#2b28cc","P":"#651ca0","A":"#1b9496","V":"#c19a19","C":"#ce7137"}
+const ColorsH = {"S":"#8bcc76","I":"#9a99ff","P":"#733da0","A":"#579596","V":"#c1af74","C":"#cea890"}
 
 function makeNameElement(ID, Name) {
    let elm = document.createElement("div")
@@ -253,9 +254,10 @@ function select(ID) {
    xhr.onreadystatechange = function () {
       if (xhr.readyState == 4 && xhr.status == 200) {
          if (OldID != "") {
-            document.getElementsByName(OldID)[0].style.backgroundColor = null;
+            document.getElementsByName(OldID)[0].style.backgroundColor = Colors[Array.from(OldID)[0]];
          }
-         document.getElementsByName(ID)[0].style.backgroundColor = "#0E0";
+         
+         document.getElementsByName(ID)[0].style.backgroundColor = ColorsH[Array.from(ID)[0]];
          OldID = ID
          var doc = document.getElementById('pdfDocument');
          doc.src = xhr.responseText;

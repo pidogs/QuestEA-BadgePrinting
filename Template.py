@@ -217,10 +217,34 @@ def MakeTeacherPDF(Code, PhotoPath="Face2.jpg"):
    #Return name of pdf and picture 
    return f"{Name}.pdf" , os.path.join(".","AllPhotos",f"{Name}.{PhotoPath.split('.')[-1]}")
 
+#make guest
+def makeNumbers(Name):
+   guestPDF = os.path.join("Templates",f"{Name}.png")
+   numFile = os.path.join("CSV",f"{Name}.number")
+   guestNumber = 1
+   if not os.path.isfile(numFile):
+      with open(numFile,'w') as f:
+         f.write(str(guestNumber))
+   else:
+      with open(numFile,'r') as f:
+         guestNumber = 1+int(f.readline())
+   template = Image.open(guestPDF)
+   w,h = template.size
+   draw = ImageDraw.Draw(template)
+   addSideText(draw,f"{guestNumber:04d}",TitleFont,0,w,h,(-750,925),300)
+   print(guestNumber)
+   with open(numFile,'w') as f:
+         f.write(str(guestNumber))
+   template = template.convert('RGB')
+   template.save(os.path.join(".","AllPDFS",f"{Name}-{guestNumber:04d}.pdf"),quality=95,resolution=300)
+   return f"{Name}-{guestNumber:04d}.pdf", os.path.join(".","AllPDFS",f"{Name}-{guestNumber:04d}.pdf")
+
 
 def makePDF(Code,PhotoPath="Face2.jpg"):
-   if Code[0] == "G":
-      return "/Guest-Badge.pdf",PhotoPath
+   if Code[0] == "V":
+      return makeNumbers("Visitor-Badge")
+   if Code[0] == "C":
+      return makeNumbers("Contractor-Badge")
    if Code[0] == "S":
       print("Student")
       t1,t2 = MakeStudentPDF(Code, PhotoPath)
