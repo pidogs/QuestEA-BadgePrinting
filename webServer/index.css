@@ -5,21 +5,31 @@ body {
    height: 100vh;
    overflow: hidden;
    color: whitesmoke;
+   margin: 0px;
 }
 
 .grid {
    display: grid;
-   grid-template-columns: 550px 700px auto;
+   grid-template-columns: 23vw auto 30vw;
    max-height : 100vh;
    overflow: hidden;
    grid-template-rows:100vh;
+   
 }
 
 .smallGrid{
    text-align: center;
    display: grid;
    grid-template-columns: repeat(3, 1fr);
+   margin-top: 0vw !important;
+   margin-bottom: 0vw !important;
+   margin: 1vw;
+   overflow: auto;
+   max-height: calc(100vh - 150px);
+   scrollbar-width: none;
+   scrollbar-color: #3763d3aa #00000000;
 }
+
 
 .input{
    display: flex;
@@ -58,20 +68,14 @@ body {
    padding: 5px;
 }
 
-#video {
+.video {
    border: 2px solid black;
-   width: 400px;
-   height: 400px;
+   width: 20vw;
+   height: auto;
+   aspect-ratio: 1/1;
    object-fit: cover;
    border-radius: 25px;
-}
-
-#photo {
-   border: 2px solid black;
-   width: 400px;
-   height: 400px;
-   object-fit: cover;
-   border-radius: 25px;
+   margin: 0px;
 }
 
 #canvas {
@@ -98,7 +102,7 @@ body {
    margin-bottom: 14px;
    padding: 10px;
    background-color: #A00;
-   border: 1px solid #000000b3;
+   border: 0px;
    border-radius: 25px;
    font-size: 20px;
    color: rgba(255, 255, 255, 1.0);
@@ -140,8 +144,8 @@ body {
 
 .print{
    display: flex;
-   height: 300px;
-   width: 360px;
+   height: 20vh;
+   width: 100%;
    margin: auto;
    padding: 100px;
    border-radius: 25px;
@@ -152,11 +156,17 @@ body {
    border: 2px solid #000;
    background-color: #0B0;
    font-size: 6em;
-   margin-top: 75px;
+   margin-top: 2vh;
    font-weight: bold;
 }
 
 .pdfViewer{
-   padding: 25px 25px 0px 75px;
+   margin-top: 25px;
+   padding-top: 0vw !important;
+   padding: 1vw;
 }
 
+.NewName{
+   height: auto;
+   margin-top: 5vh;
+}

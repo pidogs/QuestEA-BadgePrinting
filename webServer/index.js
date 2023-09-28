@@ -112,7 +112,9 @@ function printDocument() {
    var doc = document.getElementById("pdfDocument");
    doc.contentWindow.focus();
    doc.contentWindow.print();
-
+   inputID.value = "";
+   var input = document.getElementById("nameFilter");
+   input.value = "";
 }
 
 function whenPrintIsReady() {
@@ -140,8 +142,22 @@ function loadNames(list) {
 
 let NumberOfNames = 0;
 
-const Colors = {"S":"#3da01c","I":"#2b28cc","P":"#651ca0","A":"#1b9496","V":"#c19a19","C":"#ce7137"}
-const ColorsH = {"S":"#8bcc76","I":"#9a99ff","P":"#733da0","A":"#579596","V":"#c1af74","C":"#cea890"}
+const Colors = {
+   "S": "#3da01c",
+   "I": "#2b28cc",
+   "P": "#651ca0",
+   "A": "#1b9496",
+   "V": "#c19a19",
+   "C": "#ce7137"
+}
+const ColorsH = {
+   "S": "#8bcc76",
+   "I": "#9a99ff",
+   "P": "#733da0",
+   "A": "#579596",
+   "V": "#c1af74",
+   "C": "#cea890"
+}
 
 function makeNameElement(ID, Name) {
    let elm = document.createElement("div")
@@ -152,7 +168,7 @@ function makeNameElement(ID, Name) {
    elm.setAttribute("name", ID)
    elm.innerHTML = Name
    elm.style.backgroundColor = Colors[Array.from(ID)[0]]
-   
+
    return elm
 }
 
@@ -237,7 +253,7 @@ function flashEffect(element) {
       if (flashCount < 6) { // Flash twice (4 states: 2 off + 2 on)
          element.style.backgroundColor = flashCount % 2 === 0 ? "yellow" : "";
          flashCount++;
-         setTimeout(flash, 100 ); // 0.75 seconds
+         setTimeout(flash, 100); // 0.75 seconds
       }
    }
 
@@ -250,13 +266,13 @@ function select(ID) {
       flashEffect(inputID)
       return
    }
-   xhr.open("GET", "/ID?" + ID+"&"+inputID.value);
+   xhr.open("GET", "/ID?" + ID + "&" + inputID.value);
    xhr.onreadystatechange = function () {
       if (xhr.readyState == 4 && xhr.status == 200) {
          if (OldID != "") {
             document.getElementsByName(OldID)[0].style.backgroundColor = Colors[Array.from(OldID)[0]];
          }
-         
+
          document.getElementsByName(ID)[0].style.backgroundColor = ColorsH[Array.from(ID)[0]];
          OldID = ID
          var doc = document.getElementById('pdfDocument');

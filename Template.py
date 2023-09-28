@@ -248,11 +248,9 @@ def makePDF(Code,PhotoPath="Face2.jpg"):
    if Code[0] == "S":
       print("Student")
       t1,t2 = MakeStudentPDF(Code, PhotoPath)
-      print(t1,t2)
       return t1,t2
    if Code[0]:
       print("Teacher")
       t1,t2 = MakeStudentPDF(Code, PhotoPath)
-      print(t1,t2)
       return t1,t2
 
