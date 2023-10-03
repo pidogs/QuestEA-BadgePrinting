@@ -28,16 +28,15 @@
          <input class="input" type="text" id="nameFilter" placeholder="Name Search" oninput="filterNames()" value="">
          <div id="names" class="smallGrid"></div>
       </div>
-      
+
       <!-- print button  -->
-      <div class="pdfViewer">
-         <iframe type="application/pdf" src="/ThisIsFine.pdf" id="pdfDocument" width="100%" height="50%"
+      <div class="PDFColum">
+         <iframe type="application/pdf" src="/ThisIsFine.pdf" class="pdfViewer" id="pdfDocument" 
             frameborder="0"></iframe>
          <button id="print" class="print" onmouseup="printDocument();">Print</button>
          <div class="NewName">
             <input class="input" type="text" id="AddName" placeholder="Name" value="">
-            <div>
-               <div class="name">Admin</div>
+            <div class="smallGrid" style="grid-template-columns: repeat(2, 1fr);" id="makdID">
             </div>
          </div>
       </div>

@@ -172,6 +172,8 @@ function makeNameElement(ID, Name) {
    return elm
 }
 
+
+
 function filterNames() {
    var input = document.getElementById("nameFilter");
    var names = document.getElementById("names");
@@ -280,4 +282,38 @@ function select(ID) {
       }
    }
    xhr.send(null);
+}
+
+var mknameButtonName = ["Admin", "Teacher", "Parent", "Student"]
+var makdID = document.getElementById("makdID")
+var inputField = document.getElementById("AddName");
+for (let i = 0; i < mknameButtonName.length; i++) {
+   var div = document.createElement("div");
+   div.textContent = mknameButtonName[i];
+   div.style.backgroundColor = Colors[mknameButtonName[i][0]];
+   div.className = "name";
+   // Add a click event listener to each div
+   div.addEventListener("click", function () {
+      // Get the first letter of the role name
+      var firstLetter = mknameButtonName[i].charAt(0);
+      // Get the data from the input field
+      var inputData = inputField.value;
+
+      // Make the GET request
+      fetch(`/your-api-endpoint?letter=${firstLetter}&data=${inputData}`, {
+            method: "GET"
+            // Add other request options as needed (e.g., headers)
+         })
+         .then(response => {
+            if (response.ok) {
+               // Handle a successful response here
+            } else {
+               // Handle errors here
+            }
+         })
+         .catch(error => {
+            // Handle network errors here
+         });
+   });
+   makdID.appendChild(div);
 }
