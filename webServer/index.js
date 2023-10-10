@@ -115,6 +115,7 @@ function printDocument() {
    input.value = "";
    input.disabled = true;
    inputID.style.backgroundColor = "";
+   filterNames();
 }
 
 function whenPrintIsReady() {
