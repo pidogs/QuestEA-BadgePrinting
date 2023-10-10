@@ -29,6 +29,10 @@ body {
    scrollbar-width: none;
    scrollbar-color: #3763d3aa #00000000;
 }
+.smallGrid::-webkit-scrollbar {
+   width: 0px;
+ }
+ 
 
 
 .input{

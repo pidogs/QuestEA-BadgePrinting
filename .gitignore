@@ -11,3 +11,4 @@ AllPhotos/*
 *.xcf
 TEMP.png
 __pycache__
+.vscode
