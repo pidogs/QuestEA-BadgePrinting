@@ -94,8 +94,6 @@ function takepicture() {
       if (xhr.readState === 4) {
          console.log(xhr.readState);
          console.log(xhr.responseText);
-         console.log("THISOIH")
-
       }
       if (xhr.status == 200) {
          vid = document.getElementById("startbutton")
@@ -138,8 +136,13 @@ students = []
 function loadNames(list) {
    temp = list.split("\r\n");
    students = []
-   temp.forEach((row) => students.push(row.split(",")));
-   students.pop()
+   temp.pop()
+   temp.forEach((row) => {
+      rowData = row.split(",");
+      properCaseName1 = rowData[1].trim().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+      properCaseName2 = rowData[2].trim().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+      students.push([rowData[0], properCaseName1, properCaseName2]);
+    });
    filterNames(students);
 }
 
@@ -258,7 +261,6 @@ inputID.addEventListener("input", function (event) {
    //    inputID.style.backgroundColor = ""
    //    OldNumberFlag = false
    // }
-   console.log("INPUT NUM"+inputID.value.length)
    if (inputID.value.length == 10 && /^\d*$/.test(inputID.value)) {
       // Cancel the default action, if needed
       inputID.style.backgroundColor = "#8F8";
