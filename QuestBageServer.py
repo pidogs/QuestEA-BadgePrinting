@@ -15,6 +15,15 @@ if not os.path.isdir("AllPDFS"):
 if not os.path.isdir("AllPhotos"):
     os.mkdir("AllPhotos")
 
+csvData = {}
+idPath = os.path.join(".","CSV","RFID_Names.csv")
+if not os.path.exists(idPath):
+   with open(os.path.join(".","CSV","RFID_Names.csv"), 'a', newline='') as csv_file:
+      csv_writer = csv.writer(csv_file)
+      csv_writer.writerow(['RFID Number', 'Name'])
+with open(idPath, 'r') as csv_file:
+   csv_reader = csv.reader(csv_file)
+   csvData = {row[0]: row[1] for row in csv_reader if row}
 
 # import after checks becuse Template.py uses them
 import Template
@@ -47,15 +56,17 @@ def getRFID():
    global RFID
    return RFID
 
-def SaveRFIDName(ID,Name):
-   file_exists = os.path.exists(os.path.join(".","CSV","RFID_Names.csv"))
-   with open(os.path.join(".","CSV","RFID_Names.csv"), 'a', newline='') as csv_file:
-      csv_writer = csv.writer(csv_file)
-      if not file_exists:
-         csv_writer.writerow(['RFID Number', 'Name'])
-   
-      csv_writer.writerow([str(ID),str(Name)])
+csv_date = []
 
+def SaveRFIDName(ID,Name):
+   global csvData
+   if ID in csvData:
+      return
+   csvData[ID] = Name
+    # Save the updated data to the CSV file
+   with open(idPath, 'a', newline='') as csv_file:
+      csv_writer = csv.writer(csv_file)
+      csv_writer.writerow([ID, Name])
    return
 
 class MyServer(BaseHTTPRequestHandler):
@@ -130,7 +141,19 @@ class MyServer(BaseHTTPRequestHandler):
          print(os.path.join(".","AllPDFS",str(getPDF())))
          with open(os.path.join(".","AllPDFS",str(getPDF())),'rb') as f:
             self.wfile.write(f.read())
-      
+      if self.path.split("?")[0] == ("/AddName"):
+         afterString = self.path.split("?")[1]
+         afterStringSplit = afterString.split("&")
+         if afterStringSplit[0].split("=")[0]=="Type" and afterStringSplit[1].split("=")[0]=="Name":
+            responseCode = Template.addNewCSV(afterStringSplit[0].split("=")[1][0], afterStringSplit[1].split("=")[1])
+
+            self.send_response(responseCode)
+            self.send_header("Content-Type","text/text")
+            self.end_headers()
+         else:
+            self.send_response(400)
+            self.end_headers()
+
       # if self.path == "/PDF":
       #    self.send_response(200)
       #    self.send_header("Content-type", "text/csv")

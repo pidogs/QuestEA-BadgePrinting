@@ -6,6 +6,7 @@ import csv
 import datetime
 import requests
 from io import BytesIO
+import urllib
 
 #Set up stuff
 fontDir = "Fonts"
@@ -27,21 +28,40 @@ def CSVReload():
     global Students  
     with open(CSVName,encoding='utf-8-sig', mode='r') as f:
         data = csv.reader(f)
-        Students = {rows[0]:f'{rows[1].strip().title()}\n{rows[2].strip().title()}' for rows in data}
+        Students = {rows[0]:f'{rows[1].strip().title()} {rows[2].strip().title()}' for rows in data}
+
+def addNewCSV(perType,name):
+   CSVReload()
+   global Students
+   name = urllib.parse.unquote(name).title()
+   idPotential = 270000
+   for id,names in Students.items():
+      if names == name:
+         print(name)
+         return 403
+   while(perType+str(idPotential) in Students):
+      idPotential+=1
+   print(perType+str(idPotential))
+   with open(CSVName,encoding='utf-8-sig', newline='', mode='a') as f:
+      data = csv.writer(f)
+      data.writerow([perType+str(idPotential),name.split(" ")[0],name.split(" ")[1]])
+   Students[perType+str(idPotential)] = name
+   return 200
+   
 
 #Loads the csv file into dictionary for quick look up
 CSVReload()
 
 #automatically update the date
 def getYear():
-    today = datetime.date.today()
-    if today.month >= 7:
-        startYear = today.year
-    else:
-        startYear = today.year - 1
-    endYear = startYear + 1
-    
-    return f"{startYear}-{str(endYear)[2:]}"
+   today = datetime.date.today()
+   if today.month >= 7:
+      startYear = today.year
+   else:
+      startYear = today.year - 1
+   endYear = startYear + 1
+   
+   return f"{startYear}-{str(endYear)[2:]}"
 
 #counting characters in string length this can should be shortened to len(string) but it works for now/
 def charInString(input_string):
@@ -118,7 +138,7 @@ def MakeStudentPDF(Code, PhotoPath):
 
    Num = charInString(Name)
    #making the name have \n (New Line) instead of spaces
-   tmp = Name.rsplit("$", 1)
+   tmp = Name.rsplit(" ", 1)
    Name = "\n".join(tmp)
 
    #setting fontsize based on length of persons name

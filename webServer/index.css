@@ -144,9 +144,9 @@ body {
 
 .print{
    display: flex;
-   height: 20vh;
-   width: 100%;
-   margin: auto;
+   height: 30vh;
+   width: 80%;
+   margin: 7.5vh 10%;
    padding: 5vh;
    border-radius: 25px;
    cursor: pointer;
@@ -156,7 +156,6 @@ body {
    border: 2px solid #ffffff;
    background-color: #0B0;
    font-size: 6em;
-   margin-top: 2vh;
    font-weight: bold;
    color:#fff;
 }

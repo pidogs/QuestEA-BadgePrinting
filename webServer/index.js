@@ -115,6 +115,8 @@ function printDocument() {
    inputID.value = "";
    var input = document.getElementById("nameFilter");
    input.value = "";
+   input.disabled = true;
+   inputID.style.backgroundColor = "";
 }
 
 function whenPrintIsReady() {
@@ -134,9 +136,10 @@ function httpGetAsync(theUrl, callback) {
 students = []
 
 function loadNames(list) {
-
    temp = list.split("\r\n");
+   students = []
    temp.forEach((row) => students.push(row.split(",")));
+   students.pop()
    filterNames(students);
 }
 
@@ -181,7 +184,7 @@ function filterNames() {
    if (input.value == "") {
       names.innerHTML = ""
       students.forEach((row) => names.append(makeNameElement(row[0], row[1] + " " + row[2])));
-   } else {
+   }else {
       let val = input.value.toLowerCase();
       names.innerHTML = ""
       NumberOfNames = 0;
@@ -193,6 +196,42 @@ function filterNames() {
             names.append(makeNameElement(row[0], n))
          }
       })
+      if (NumberOfNames == 0) {
+         var mknameButtonName = ["Admin", "Instructor", "Parent", "Student"]
+         for (let i = 0; i < mknameButtonName.length; i++) {
+            var div = document.createElement("div");
+            div.textContent = mknameButtonName[i];
+            div.style.backgroundColor = Colors[mknameButtonName[i][0]];
+            div.className = "name";
+            // Add a click event listener to each div
+            div.addEventListener("click", function () {
+               // Get the first letter of the role name
+               var firstLetter = mknameButtonName[i].charAt(0);
+               // Get the data from the input field
+               var inputData = val;
+               // Make the GET request
+               fetch(`/AddName?Type=${firstLetter}&Name=${inputData}`, {
+                     method: "GET"
+                  })
+                  .then(response => {
+                     if (response.ok) {
+                        httpGetAsync('/user-export.csv',loadNames);
+                        filterNames();
+                        setTimeout(function() {
+                           document.getElementById("nameSelection").click();
+                       }, 100);
+                     } else {
+                        // Handle errors here
+                     }
+                  })
+                  .catch(error => {
+                     // Handle network errors here
+                  });
+            });
+            names.appendChild(div);
+         }
+         
+      }
    }
 }
 
@@ -212,27 +251,27 @@ inputName.addEventListener("keydown", function (event) {
 
 var OldNumberFlag = false
 var inputID = document.getElementById("IDCard");
-inputID.addEventListener("keydown", function (event) {
-   if (OldNumberFlag) {
-      inputID.value = ""
-      inputID.style.backgroundColor = ""
-      OldNumberFlag = false
-   }
-   // If the user presses the "Enter" key on the keyboard
-   if (event.key === "Enter") {
+inputID.addEventListener("input", function (event) {
+   var inputName = document.getElementById("nameFilter");
+   // if (OldNumberFlag) {
+   //    inputID.value = ""
+   //    inputID.style.backgroundColor = ""
+   //    OldNumberFlag = false
+   // }
+   console.log("INPUT NUM"+inputID.value.length)
+   if (inputID.value.length == 10 && /^\d*$/.test(inputID.value)) {
+      // Cancel the default action, if needed
+      inputID.style.backgroundColor = "#8F8";
+      inputName.disabled = false;
       OldNumberFlag = true
-      if (inputID.value.length == 10) {
-         // Cancel the default action, if needed
-         inputID.style.backgroundColor = "#8F8"
-      }
-      if (inputID.value.length != 10) {
-         inputID.style.backgroundColor = "#F88"
-      }
+   }else if (inputID.value.length != 10) {
+      inputID.style.backgroundColor = "#F88"
+      inputName.disabled = true;
    }
    if (event.key === "Escape") {
       inputID.style.backgroundColor = ""
       inputID.value = ""
-      OldNumberFlag = false
+      // OldNumberFlag = false
    }
 });
 
@@ -250,7 +289,6 @@ function httpGetAsync(theUrl, callback) {
 
 function flashEffect(element) {
    let flashCount = 0;
-
    function flash() {
       if (flashCount < 6) { // Flash twice (4 states: 2 off + 2 on)
          element.style.backgroundColor = flashCount % 2 === 0 ? "yellow" : "";
@@ -274,7 +312,6 @@ function select(ID) {
          if (OldID != "") {
             document.getElementsByName(OldID)[0].style.backgroundColor = Colors[Array.from(OldID)[0]];
          }
-
          document.getElementsByName(ID)[0].style.backgroundColor = ColorsH[Array.from(ID)[0]];
          OldID = ID
          var doc = document.getElementById('pdfDocument');
@@ -282,38 +319,4 @@ function select(ID) {
       }
    }
    xhr.send(null);
-}
-
-var mknameButtonName = ["Admin", "Teacher", "Parent", "Student"]
-var makdID = document.getElementById("makdID")
-var inputField = document.getElementById("AddName");
-for (let i = 0; i < mknameButtonName.length; i++) {
-   var div = document.createElement("div");
-   div.textContent = mknameButtonName[i];
-   div.style.backgroundColor = Colors[mknameButtonName[i][0]];
-   div.className = "name";
-   // Add a click event listener to each div
-   div.addEventListener("click", function () {
-      // Get the first letter of the role name
-      var firstLetter = mknameButtonName[i].charAt(0);
-      // Get the data from the input field
-      var inputData = inputField.value;
-
-      // Make the GET request
-      fetch(`/your-api-endpoint?letter=${firstLetter}&data=${inputData}`, {
-            method: "GET"
-            // Add other request options as needed (e.g., headers)
-         })
-         .then(response => {
-            if (response.ok) {
-               // Handle a successful response here
-            } else {
-               // Handle errors here
-            }
-         })
-         .catch(error => {
-            // Handle network errors here
-         });
-   });
-   makdID.appendChild(div);
 }

@@ -24,8 +24,8 @@
       </div>
       <!-- Name search section -->
       <div style="width: 100%;">
-         <input class="input" type="text" id="IDCard" placeholder="ID" value="">
-         <input class="input" type="text" id="nameFilter" placeholder="Name Search" oninput="filterNames()" value="">
+         <input class="input" type="text" type="number" id="IDCard" placeholder="ID" value="">
+         <input class="input" type="text" id="nameFilter" disabled="True" placeholder="Name Search" oninput="filterNames()" value="">
          <div id="names" class="smallGrid"></div>
       </div>
 
@@ -34,11 +34,6 @@
          <iframe type="application/pdf" src="/ThisIsFine.pdf" class="pdfViewer" id="pdfDocument" 
             frameborder="0"></iframe>
          <button id="print" class="print" onmouseup="printDocument();">Print</button>
-         <div class="NewName">
-            <input class="input" type="text" id="AddName" placeholder="Name" value="">
-            <div class="smallGrid" style="grid-template-columns: repeat(2, 1fr);" id="makdID">
-            </div>
-         </div>
       </div>
    </div>
    <!-- iframe to load the pdf into so it can be printed -->
