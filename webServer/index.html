@@ -24,16 +24,25 @@
       </div>
       <!-- Name search section -->
       <div style="width: 100%;">
-         <input class="input" type="text" type="number" id="IDCard" placeholder="ID" value="">
-         <input class="input" type="text" id="nameFilter" disabled="True" placeholder="Name Search" oninput="filterNames()" value="">
+         <input class="input" type="text" type="number" onkeypress="valNumber(event)" length="10" id="IDCard"
+            placeholder="RFID ID" value="">
+         <input class="input" type="text" id="nameFilter" disabled="True" placeholder="Name Search"
+            oninput="filterNames()" value="">
          <div id="names" class="smallGrid"></div>
       </div>
 
       <!-- print button  -->
       <div class="PDFColum">
-         <iframe type="application/pdf" src="/ThisIsFine.pdf" class="pdfViewer" id="pdfDocument" 
+         <iframe type="application/pdf" src="/ThisIsFine.pdf" class="pdfViewer" id="pdfDocument"
             frameborder="0"></iframe>
          <button id="print" class="print" onmouseup="printDocument();">Print</button>
+         <div>
+            <input class="input" type="number" onkeypress="valNumber(event)" length="6" type="number" id="QEID"
+               placeholder="ID" value="" style="width: 78%;">
+            <div id="error">
+               <a>Error: ID already assigned Next unassigned ID is </a><a id="nextID"></a>
+            </div>
+         </div>
       </div>
    </div>
    <!-- iframe to load the pdf into so it can be printed -->

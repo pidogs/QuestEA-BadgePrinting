@@ -143,7 +143,7 @@ function loadNames(list) {
       properCaseName1 = rowData[1].trim().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
       properCaseName2 = rowData[2].trim().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
       students.push([rowData[0], properCaseName1, properCaseName2]);
-    });
+   });
    filterNames(students);
 }
 
@@ -155,7 +155,8 @@ const Colors = {
    "P": "#651ca0",
    "A": "#1b9496",
    "V": "#c19a19",
-   "C": "#ce7137"
+   "C": "#ce7137",
+   "G": "#cf3849"
 }
 const ColorsH = {
    "S": "#8bcc76",
@@ -163,7 +164,8 @@ const ColorsH = {
    "P": "#733da0",
    "A": "#579596",
    "V": "#c1af74",
-   "C": "#cea890"
+   "C": "#cea890",
+   "G": "#ce7b85"
 }
 
 function makeNameElement(ID, Name) {
@@ -188,7 +190,7 @@ function filterNames() {
    if (input.value == "") {
       names.innerHTML = ""
       students.forEach((row) => names.append(makeNameElement(row[0], row[1] + " " + row[2])));
-   }else {
+   } else {
       let val = input.value.toLowerCase();
       names.innerHTML = ""
       NumberOfNames = 0;
@@ -211,30 +213,40 @@ function filterNames() {
             div.addEventListener("click", function () {
                // Get the first letter of the role name
                var firstLetter = mknameButtonName[i].charAt(0);
+               var QEID = document.getElementById("QEID");
                // Get the data from the input field
                var inputData = val;
-               // Make the GET request
-               fetch(`/AddName?Type=${firstLetter}&Name=${inputData}`, {
-                     method: "GET"
-                  })
-                  .then(response => {
-                     if (response.ok) {
-                        httpGetAsync('/user-export.csv',loadNames);
-                        filterNames();
-                        setTimeout(function() {
-                           document.getElementById("nameSelection").click();
-                       }, 100);
-                     } else {
-                        // Handle errors here
+               if (QEID.value.length == parseInt(QEID.getAttribute("length"))) {
+                  // Make the GET request
+                  var xhr2 = new XMLHttpRequest();
+                  xhr2.open("GET", `/AddName?ID=${firstLetter}${QEID.value}&Name=${inputData}`);
+                  xhr2.onload = function () {
+                     // console.log(xhr.readyState,xhr2.status)
+                     if (xhr.readyState === 4) {
+                        if (xhr2.status == 250) {
+                           document.getElementById("error").style.display = "inline-block";
+                           document.getElementById("nextID").innerHTML = xhr2.responseText.substring(1);
+                           flashEffect(QEID, "#ff0000");
+                        } else if (xhr2.status == 200) {
+                           document.getElementById("error").style.display = "none";
+                           httpGetAsync('/user-export.csv', loadNames);
+                           filterNames();
+                           setTimeout(function () {
+                              document.getElementById("nameSelection").click();
+                           }, 200);
+                        } else {
+
+                        }
                      }
-                  })
-                  .catch(error => {
-                     // Handle network errors here
-                  });
+                  }
+                  xhr2.send()
+               } else {
+                  flashEffect(QEID, "#ffff00");
+               }
             });
             names.appendChild(div);
          }
-         
+
       }
    }
 }
@@ -253,28 +265,35 @@ inputName.addEventListener("keydown", function (event) {
    }
 });
 
-var OldNumberFlag = false
 var inputID = document.getElementById("IDCard");
 inputID.addEventListener("input", function (event) {
    var inputName = document.getElementById("nameFilter");
-   // if (OldNumberFlag) {
-   //    inputID.value = ""
-   //    inputID.style.backgroundColor = ""
-   //    OldNumberFlag = false
-   // }
-   if (inputID.value.length == 10 && /^\d*$/.test(inputID.value)) {
+   if (inputID.value.length == parseInt(inputID.getAttribute("length")) && /^\d*$/.test(inputID.value)) {
       // Cancel the default action, if needed
       inputID.style.backgroundColor = "#8F8";
       inputName.disabled = false;
-      OldNumberFlag = true
-   }else if (inputID.value.length != 10) {
+   } else if (inputID.value.length != parseInt(inputID.getAttribute("length"))) {
       inputID.style.backgroundColor = "#F88"
       inputName.disabled = true;
    }
    if (event.key === "Escape") {
       inputID.style.backgroundColor = ""
       inputID.value = ""
-      // OldNumberFlag = false
+   }
+});
+
+
+var QEID = document.getElementById("QEID");
+QEID.addEventListener("input", function (event) {
+   if (QEID.value.length == parseInt(QEID.getAttribute("length")) && /^\d*$/.test(QEID.value)) {
+      // Cancel the default action, if needed
+      QEID.style.backgroundColor = "#8F8";
+   } else if (QEID.value.length != parseInt(QEID.getAttribute("length"))) {
+      QEID.style.backgroundColor = "#F88"
+   }
+   if (event.key === "Escape") {
+      QEID.style.backgroundColor = ""
+      QEID.value = ""
    }
 });
 
@@ -290,13 +309,14 @@ function httpGetAsync(theUrl, callback) {
    xhr.send(null);
 }
 
-function flashEffect(element) {
+function flashEffect(element, color) {
    let flashCount = 0;
+
    function flash() {
       if (flashCount < 6) { // Flash twice (4 states: 2 off + 2 on)
-         element.style.backgroundColor = flashCount % 2 === 0 ? "yellow" : "";
+         element.style.backgroundColor = flashCount % 2 === 0 ? color : "";
          flashCount++;
-         setTimeout(flash, 100); // 0.75 seconds
+         setTimeout(flash, 150); // 0.75 seconds
       }
    }
 
@@ -306,7 +326,7 @@ function flashEffect(element) {
 
 function select(ID) {
    if (inputID.value.length != 10) {
-      flashEffect(inputID)
+      flashEffect(inputID, "#ffff00")
       return
    }
    xhr.open("GET", "/ID?" + ID + "&" + inputID.value);
@@ -322,4 +342,21 @@ function select(ID) {
       }
    }
    xhr.send(null);
+}
+
+function valNumber(event) {
+   const inputValue = event.target.value; // Access input value using 'this'
+   const charCode = (event.which) ? event.which : event.keyCode;
+   const char = String.fromCharCode(charCode);
+   const regex = /[0-9]|\./; // Allow numbers and decimal points
+
+   if (!regex.test(char)) {
+      event.preventDefault();
+      return false;
+   }
+
+   // Additional validation logic can be added here
+   // For example, check decimal point placement or limit input length
+
+   return true;
 }

@@ -150,7 +150,7 @@ body {
    display: flex;
    height: 30vh;
    width: 80%;
-   margin: 7.5vh 10%;
+   margin: 1.5vh 10% 2vh 10%;
    padding: 5vh;
    border-radius: 25px;
    cursor: pointer;
@@ -177,4 +177,31 @@ body {
 .pdfViewer{
    height: 50vh;
    width:100%;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+#error {
+   font-size: 2em;
+   font-weight: bold;
+   color:#ff0000;
+
+   text-align: center;
+   justify-content: center;
+   border: 2px solid #f00;
+   background-color: #800;
+   border-radius: 25px;
+   padding: 5px;
+   display: none;
 }

@@ -30,23 +30,29 @@ def CSVReload():
         data = csv.reader(f)
         Students = {rows[0]:f'{rows[1].strip().title()} {rows[2].strip().title()}' for rows in data}
 
-def addNewCSV(perType,name):
+def addNewCSV(ID,name):
+   ID = str(ID)
    CSVReload()
    global Students
    name = urllib.parse.unquote(name).title()
-   idPotential = 270000
    for id,names in Students.items():
       if names == name:
          print(name)
-         return 403
-   while(perType+str(idPotential) in Students):
-      idPotential+=1
-   print(perType+str(idPotential))
-   with open(CSVName,encoding='utf-8-sig', newline='', mode='a') as f:
-      data = csv.writer(f)
-      data.writerow([perType+str(idPotential),name.split(" ")[0],name.split(" ")[1]])
-   Students[perType+str(idPotential)] = name
-   return 200
+         return 403,None
+   
+   if(ID not in Students):
+      with open(CSVName,encoding='utf-8-sig', newline='', mode='a') as f:
+         data = csv.writer(f)
+         data.writerow([ID,name.split(" ")[0],name.split(" ")[1]])
+      Students[ID] = name
+      return 200,None
+   else:
+      print(ID)
+      idPotential = int(ID[1:])
+      while(ID[0]+str(idPotential) in Students):
+         idPotential+=1
+      print(ID[0]+str(idPotential))
+      return 250,ID[0]+str(idPotential)
    
 
 #Loads the csv file into dictionary for quick look up
@@ -72,8 +78,8 @@ def charInString(input_string):
    return letter_count
 
 #generates qrcode and puts it on the template image
-def addQrCode(Code,BaseImage,QrOffset,w,h):
-   qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H,box_size = 10,border=2)
+def addQrCode(Code,BaseImage,QrOffset,w,h,size=10):
+   qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H,box_size = size,border=2)
    qr.add_data(Code)
    qr.make(fit=True)
    qr = qr.make_image(fill_color="black",back_color="white")
@@ -153,7 +159,7 @@ def MakeStudentPDF(Code, PhotoPath):
 
    template = addQrCode(Code,template,QrOffset,w,h) #Qr Code
    if Code[1:] == "050301":
-      template = addURLImage(template,"https://avatars.githubusercontent.com/u/44046537?v=0",110,(188,725),0) #David
+      template = addURLImage(template,"https://avatars.githubusercontent.com/u/44046537?v=0",110,(188,725),0)
    template,draw = addFaceAndBorder(template,PhotoPath,maxsize,FacePos,FaceBorderWidth) #Face
    topWords(draw,Name,font,w,h,hOffset=nameFromTop) #Name
    TitleH = addSideText(draw,title,TitleFont,75,w,h,FacePos,maxsize)#Title student, teacher, ....
@@ -239,6 +245,7 @@ def MakeTeacherPDF(Code, PhotoPath="Face2.jpg"):
 
 #make guest
 def makeNumbers(Name):
+   
    guestPDF = os.path.join("Templates",f"{Name}.png")
    numFile = os.path.join("CSV",f"{Name}.number")
    guestNumber = 1
@@ -251,10 +258,14 @@ def makeNumbers(Name):
    template = Image.open(guestPDF)
    w,h = template.size
    draw = ImageDraw.Draw(template)
-   addSideText(draw,f"{guestNumber:04d}",TitleFont,0,w,h,(-750,925),300)
+   addSideText(draw,f"{guestNumber:04d}",TitleFont,0,w,h,(-300,900),300)
+   if Name == "Guest-Badge":
+      font = ImageFont.truetype(NameFont, 120)
+      topWords(draw,"Guest\nBadge",font,w,h,0,hOffset=100) #Name
+      template = addQrCode(f"G{guestNumber:06}",template,180,w,h,size=11.5) #Qr Code
    print(guestNumber)
    with open(numFile,'w') as f:
-         f.write(str(guestNumber))
+      f.write(str(guestNumber))
    template = template.convert('RGB')
    template.save(os.path.join(".","AllPDFS",f"{Name}-{guestNumber:04d}.pdf"),quality=95,resolution=300)
    return f"{Name}-{guestNumber:04d}.pdf", os.path.join(".","AllPDFS",f"{Name}-{guestNumber:04d}.pdf")
@@ -263,6 +274,8 @@ def makeNumbers(Name):
 def makePDF(Code,PhotoPath="Face2.jpg"):
    if Code[0] == "V":
       return makeNumbers("Visitor-Badge")
+   if Code[0] == "G":
+      return makeNumbers("Guest-Badge")
    if Code[0] == "C":
       return makeNumbers("Contractor-Badge")
    if Code[0] == "S":

@@ -144,12 +144,15 @@ class MyServer(BaseHTTPRequestHandler):
       if self.path.split("?")[0] == ("/AddName"):
          afterString = self.path.split("?")[1]
          afterStringSplit = afterString.split("&")
-         if afterStringSplit[0].split("=")[0]=="Type" and afterStringSplit[1].split("=")[0]=="Name":
-            responseCode = Template.addNewCSV(afterStringSplit[0].split("=")[1][0], afterStringSplit[1].split("=")[1])
-
+         if afterStringSplit[0].split("=")[0]=="ID" and afterStringSplit[1].split("=")[0]=="Name":
+            responseCode,content = Template.addNewCSV(str(afterStringSplit[0].split("=")[1]),\
+                                                       str(afterStringSplit[1].split("=")[1]))
+            print(responseCode)
             self.send_response(responseCode)
             self.send_header("Content-Type","text/text")
             self.end_headers()
+            if(responseCode == 250):
+               self.wfile.write(content.encode('utf-8'))
          else:
             self.send_response(400)
             self.end_headers()
